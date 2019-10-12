@@ -1352,10 +1352,7 @@ int ambassadorEffect(int choice1, int choice2, struct gameState *state,
     if (DEBUG)
         printf("Player %d reveals card number: %d\n", currentPlayer, state->hand[currentPlayer][choice1]);
 
-    //increase supply count for choosen card by amount being discarded
-    state->supplyCount[state->hand[currentPlayer][choice1]] += choice2;
-
-    //each other player gains a copy of revealed card
+    // Each other player gains a copy of revealed card
     for (i = 0; i < state->numPlayers; i++)
     {
         if (i != currentPlayer)
@@ -1364,16 +1361,17 @@ int ambassadorEffect(int choice1, int choice2, struct gameState *state,
         }
     }
 
-    //discard played card from hand
+    // Discard played card from hand
     discardCard(handPos, currentPlayer, state, 0);
 
-    //trash copies of cards returned to supply
+    // Return cards to supply and trash them.
     for (j = 0; j < choice2; j++)
     {
         for (i = 0; i < state->handCount[currentPlayer]; i++)
         {
             if (state->hand[currentPlayer][i] == state->hand[currentPlayer][choice1])
             {
+                state->supplyCount[state->hand[currentPlayer][choice1]] += 1;
                 discardCard(i, currentPlayer, state, 1);
                 break;
             }
@@ -1395,23 +1393,19 @@ int tributeEffect(struct gameState *state, int nextPlayer, int *tributeRevealedC
             state->discardCount[nextPlayer]--;
         }
         else {
-            //No Card to Reveal
+            // No Card to Reveal
             if (DEBUG) {
                 printf("No cards to reveal\n");
             }
         }
-    }
-
-    else {
+    } else {
         if (state->deckCount[nextPlayer] == 0) {
             for (i = 0; i < state->discardCount[nextPlayer]; i++) {
-                state->deck[nextPlayer][i] = state->discard[nextPlayer][i];//Move to deck
-                state->deckCount[nextPlayer]++;
+                state->deck[nextPlayer][i] = state->discard[nextPlayer][i]; // Move to deck
                 state->discard[nextPlayer][i] = -1;
-                state->discardCount[nextPlayer]--;
             }
-
-            shuffle(nextPlayer,state);//Shuffle the deck
+            state->deckCount[nextPlayer] = state->discardCount[nextPlayer];
+            shuffle(nextPlayer,state); // Shuffle the deck
         }
         tributeRevealedCards[0] = state->deck[nextPlayer][state->deckCount[nextPlayer]-1];
         state->deck[nextPlayer][state->deckCount[nextPlayer]--] = -1;
@@ -1421,7 +1415,7 @@ int tributeEffect(struct gameState *state, int nextPlayer, int *tributeRevealedC
         state->deckCount[nextPlayer]--;
     }
 
-    if (tributeRevealedCards[0] == tributeRevealedCards[1]) { //If we have a duplicate card, just drop one
+    if (tributeRevealedCards[0] == tributeRevealedCards[1]) { // If we have a duplicate card, just drop one
         state->playedCards[state->playedCardCount] = tributeRevealedCards[1];
         state->playedCardCount++;
         tributeRevealedCards[1] = -1;
@@ -1447,12 +1441,12 @@ int tributeEffect(struct gameState *state, int nextPlayer, int *tributeRevealedC
 int mineEffect(int choice1, int choice2, struct gameState *state,
                 int handPos, int currentPlayer)
 {
-    int j = 0;
+    int cardToTrash = 0;
     int i = 0;
 
-    j = state->hand[currentPlayer][choice1];  //store card we will trash
+    cardToTrash = state->hand[currentPlayer][choice1];  // Store card we will trash
 
-    if (state->hand[currentPlayer][choice1] < copper || state->hand[currentPlayer][choice1] > gold)
+    if (cardToTrash < copper || cardToTrash > gold)
     {
         return -1;
     }
@@ -1462,20 +1456,20 @@ int mineEffect(int choice1, int choice2, struct gameState *state,
         return -1;
     }
 
-    if ( (getCost(state->hand[currentPlayer][choice1]) + 3) > getCost(choice2) )
+    if ( (getCost(cardToTrash) + 3) > getCost(choice2) )
     {
         return -1;
     }
 
     gainCard(choice2, state, 2, currentPlayer);
 
-    //discard card from hand
+    // Discard card from hand
     discardCard(handPos, currentPlayer, state, 0);
 
-    //discard trashed card
+    // Discard trashed card
     for (i = 0; i < state->handCount[currentPlayer]; i++)
     {
-        if (state->hand[currentPlayer][i] == j)
+        if (state->hand[currentPlayer][i] == cardToTrash)
         {
             discardCard(i, currentPlayer, state, 0);
             break;
