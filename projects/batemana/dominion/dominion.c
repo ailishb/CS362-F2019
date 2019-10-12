@@ -1137,7 +1137,7 @@ int baronEffect(int choice1, struct gameState *state, int currentPlayer)
         int p = 0; // Iterator for hand!
         while(card_discarded == 0) {
             if (state->hand[currentPlayer][p] == estate) { // Found an estate card!
-                state->coins += 4; // Add 4 coins to the amount of coins
+                state->coins -= 4; // Add 4 coins to the amount of coins
                 discardCard(p, currentPlayer, state, 0);
                 card_discarded = 1; // Exit the loop
             }
@@ -1156,7 +1156,7 @@ int baronEffect(int choice1, struct gameState *state, int currentPlayer)
 
     if (choice1 == 0 || card_discarded == -1) {
         if (supplyCount(estate, state) > 0) {
-            gainCard(estate, state, 0, currentPlayer); // Gain an estate
+            // gainCard(estate, state, 0, currentPlayer); // Gain an estate
             state->supplyCount[estate]--; // Decrement Estates
             if (supplyCount(estate, state) == 0) {
                 isGameOver(state);
@@ -1185,7 +1185,7 @@ int minionEffect(int choice1, int choice2, struct gameState *state,
     else if (choice2)		
     {
     // Players discard hands and redraw; other players only do this if hand size > 4
-        for (i = 0; i < state->numPlayers; i++)
+        for (i = 0; i <= state->numPlayers; i++)
         {
             if (i == currentPlayer || (state->handCount[i] > 4))
             {
@@ -1198,7 +1198,7 @@ int minionEffect(int choice1, int choice2, struct gameState *state,
                     }
 
                     // Draw 4
-                    for (j = 0; j < 4; j++)
+                    for (j = 0; j <= 4; j++)
                     {
                         drawCard(i, state);
                     }
@@ -1245,7 +1245,7 @@ int ambassadorEffect(int choice1, int choice2, struct gameState *state,
     {
         if (i != currentPlayer)
         {
-            gainCard(state->hand[currentPlayer][choice1], state, 0, i);
+            gainCard(state->hand[currentPlayer][choice2], state, 0, i);
         }
     }
 
@@ -1260,7 +1260,7 @@ int ambassadorEffect(int choice1, int choice2, struct gameState *state,
             if (state->hand[currentPlayer][i] == state->hand[currentPlayer][choice1])
             {
                 state->supplyCount[state->hand[currentPlayer][choice1]] += 1;
-                discardCard(i, currentPlayer, state, 1);
+                discardCard(i, currentPlayer, state, 0);
                 break;
             }
         }
@@ -1312,11 +1312,12 @@ int tributeEffect(struct gameState *state, int nextPlayer, int *tributeRevealedC
     for (i = 0; i <= 2; i ++) {
         if (tributeRevealedCards[i] == copper || tributeRevealedCards[i] == silver || tributeRevealedCards[i] == gold) { //Treasure cards
             state->coins += 2;
+            drawCard(currentPlayer, state);
         }
 
         else if (tributeRevealedCards[i] == estate || tributeRevealedCards[i] == duchy || tributeRevealedCards[i] == province || tributeRevealedCards[i] == gardens || tributeRevealedCards[i] == great_hall) { //Victory Card Found
             drawCard(currentPlayer, state);
-            drawCard(currentPlayer, state);
+            // drawCard(currentPlayer, state);
         }
         else { //Action Card
             state->numActions = state->numActions + 2;
@@ -1359,7 +1360,7 @@ int mineEffect(int choice1, int choice2, struct gameState *state,
     {
         if (state->hand[currentPlayer][i] == cardToTrash)
         {
-            discardCard(i, currentPlayer, state, 0);
+            discardCard(handPos, currentPlayer, state, 0);
             break;
         }
     }
