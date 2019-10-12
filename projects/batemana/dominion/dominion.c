@@ -1345,7 +1345,7 @@ int mineEffect(int choice1, int choice2, struct gameState *state,
         return -1;
     }
 
-    if ( (getCost(cardToTrash) + 3) > getCost(choice2) )
+    if ( (getCost(cardToTrash) + 2) > getCost(choice2) )
     {
         return -1;
     }
