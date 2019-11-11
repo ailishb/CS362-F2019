@@ -1,5 +1,6 @@
 #include "dominion.h"
 #include "dominion_helpers.h"
+#include "unittest_helpers.h"
 #include "rngs.h"
 #include <stdio.h>
 #include <math.h>
@@ -12,6 +13,14 @@ int compare(const void* a, const void* b) {
         return -1;
     return 0;
 }
+
+int assertIntEquals(int a, int b) {
+    if (a == b) {
+        return 1;
+    } else {
+        return 0;
+    };
+};
 
 struct gameState* newGame() {
     struct gameState* g = malloc(sizeof(struct gameState));
@@ -1185,12 +1194,12 @@ int minionEffect(int choice1, int choice2, struct gameState *state,
     else if (choice2)		
     {
     // Players discard hands and redraw; other players only do this if hand size > 4
-        for (i = 0; i <= state->numPlayers; i++)
+        for (i = 0; i < state->numPlayers; i++)
         {
             if (i == currentPlayer || (state->handCount[i] > 4))
             {
-                if ( state->handCount[i] > 4 )
-                {
+                // if ( state->handCount[i] > 4 )
+                // {
                     // Discard hand
                     while( state->handCount[i] > 0 )
                     {
@@ -1202,7 +1211,7 @@ int minionEffect(int choice1, int choice2, struct gameState *state,
                     {
                         drawCard(i, state);
                     }
-                }
+                // }
             }
         }
     }
@@ -1227,7 +1236,7 @@ int ambassadorEffect(int choice1, int choice2, struct gameState *state,
 
     for (i = 0; i < state->handCount[currentPlayer]; i++)
     {
-        if (i != handPos && i == state->hand[currentPlayer][choice1] && i != choice1)
+        if (i != handPos && state->hand[currentPlayer][i] == state->hand[currentPlayer][choice1])
         {
             j++;
         }
