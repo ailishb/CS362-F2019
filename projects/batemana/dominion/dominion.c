@@ -13,6 +13,14 @@ int compare(const void* a, const void* b) {
     return 0;
 }
 
+int assertIntEquals(int a, int b) {
+    if (a == b) {
+        return 1;
+    } else {
+        return 0;
+    };
+};
+
 struct gameState* newGame() {
     struct gameState* g = malloc(sizeof(struct gameState));
     return g;
@@ -1185,7 +1193,7 @@ int minionEffect(int choice1, int choice2, struct gameState *state,
     else if (choice2)		
     {
     // Players discard hands and redraw; other players only do this if hand size > 4
-        for (i = 0; i <= state->numPlayers; i++)
+        for (i = 0; i < state->numPlayers; i++)
         {
             if (i == currentPlayer || (state->handCount[i] > 4))
             {

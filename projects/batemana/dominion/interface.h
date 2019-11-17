@@ -117,7 +117,7 @@ void printScores(struct gameState *game);
 
 void selectKingdomCards(int randomSeed, int kingdomCards[NUM_K_CARDS]);
 
-
+void printStateFull(struct gameState *game);
 
 #endif
 

@@ -423,3 +423,20 @@ void executeBotTurn(int player, int *turnNum, struct gameState *game) {
         printf("Player %d's turn number %d\n\n", currentPlayer, (*turnNum));
     }
 }
+
+void printStateFull(struct gameState *game) {
+    printf("numPlayers: %d\n", game->numPlayers);
+    printf("whoseTurn: %d\n", game->whoseTurn);
+    printf("coins: %d\n", game->coins);
+    printf("numBuys: %d\n", game->numBuys);
+    printf("Player states:\n");
+    int i = 0;
+    for (i = 0; i < game->numPlayers; i++) {
+        printf("Player %d handCount: %d\n", i, game->handCount[i]);
+        printf("Player %d deckCount: %d\n", i, game->deckCount[i]);
+        printf("Player %d discardCount: %d\n", i, game->discardCount[i]);
+        printHand(i, game);
+        printf("----------------------------\n");
+    }
+
+}
