@@ -34,8 +34,8 @@ randomtests: randomtestcard1.c randomtestcard2.c randomtestcard3.c dominion.o rn
 
 randomtestresults: randomtests
 	./randomtestcard1 >> randomtests.out
-	#./randomtestcard2 >> randomtests.out
-	#./randomtestcard3 >> randomtests.out
+	./randomtestcard2 >> randomtests.out
+	./randomtestcard3 >> randomtests.out
 	gcov -b -f dominion.c >> randomtests.out
 	cat dominion.c.gcov >> randomtests.out
 

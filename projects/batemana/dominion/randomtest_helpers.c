@@ -13,6 +13,18 @@ void randomizeGamestate(struct gameState *state) {
     state->numBuys = rand() % 4;
     int i;
     int k;
+    // Randomize deckCount and decks of all players
+    for (i = 0; i < state->numPlayers; i++) {
+        state->deckCount[i] = rand() % 15;
+        for (k = 0; k < state->deckCount[i]; k++) {
+            // Get random card that is in game
+            int card = rand() % (treasure_map + 1);
+            while (state->supplyCount[card] == -1) {
+                card = rand() % (treasure_map + 1);
+            }
+            state->deck[i][k] = card;
+        }
+    }
     // Randomize handcount and hands of all players
     for (i = 0; i < state->numPlayers; i++) {
         state->handCount[i] = rand() % 10;

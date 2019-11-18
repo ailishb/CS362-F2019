@@ -69,8 +69,6 @@ int main () {
                 printf("baronEffect Test 2 failed.\n");
             }
         }
-
-        printf("Test %d completed!\n", counter);
     }
     printf("%d iterations run for baronEffect function.", counter);
     return 0;
